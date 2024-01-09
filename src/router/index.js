@@ -1,4 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import SignupView from "@/views/SignupView.vue";
@@ -8,6 +10,9 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      protected: true,
+    },
   },
   {
     path: "/about",
@@ -33,6 +38,21 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta?.protected);
+  if (requiresAuth) {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        next("/login"); // or wherever your login page is
+      } else {
+        next();
+      }
+    });
+  } else {
+    next();
+  }
 });
 
 export default router;
