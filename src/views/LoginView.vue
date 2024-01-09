@@ -59,6 +59,9 @@
 </template>
 
 <script>
+import router from "@/router";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase";
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
@@ -72,7 +75,7 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       if (!this.email || !this.password) {
         return toast.error("All fields are required!");
       }
@@ -83,7 +86,19 @@ export default {
         return toast.error("Email is not valid");
       }
 
-      console.log(this.email, this.password, this.remember);
+      if (this.password.length < 8) {
+        return toast.error("Password is too short");
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, this.email, this.password);
+
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };
