@@ -59,6 +59,9 @@
 </template>
 
 <script>
+import { useToast } from "vue-toastification";
+const toast = useToast();
+
 export default {
   name: "LoginView",
   data() {
@@ -70,6 +73,16 @@ export default {
   },
   methods: {
     handleSubmit() {
+      if (!this.email || !this.password) {
+        return toast.error("All fields are required!");
+      }
+
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      if (!regex.test(this.email)) {
+        return toast.error("Email is not valid");
+      }
+
       console.log(this.email, this.password, this.remember);
     },
   },
