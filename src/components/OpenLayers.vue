@@ -2,6 +2,25 @@
   <h3>Open Layers</h3>
 
   <div class="w-75 h-75 m-auto d-flex flex-column align-items-start">
+    <div class="w-100 mb-1 d-flex justify-content-between">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="editMode"
+          @change="toggleEditMode($event.target.checked)"
+        />
+        <label for="editMode" class="form-check-label">Edit Mode</label>
+      </div>
+      <button
+        v-if="drawingSelected"
+        class="btn btn-danger"
+        @click="deleteSelectedFeature"
+      >
+        Delete
+      </button>
+    </div>
+
     <div id="map" class="map w-100 h-100"></div>
 
     <div class="row mt-1">
@@ -11,6 +30,7 @@
           <select
             class="form-select"
             id="type"
+            v-model="drawType"
             @change="addInteraction($event.target.value)"
           >
             <option value="None">None</option>
@@ -73,6 +93,9 @@ import View from "ol/View";
 import Map from "ol/Map";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM as OSMSource, Vector as VectorSource } from "ol/source";
+import Modify from "ol/interaction/Modify";
+import Select from "ol/interaction/Select";
+import { click } from "ol/events/condition";
 
 import Draw from "ol/interaction/Draw";
 
@@ -83,10 +106,14 @@ export default {
   name: "OpenLayersComponent",
   data() {
     return {
+      drawType: "None",
       map: null,
       draw: null, // Draw interaction
       source: new VectorSource({ wrapX: false }),
       featuresStack: [],
+      select: null,
+      modify: null,
+      drawingSelected: false,
       styleOptions: {
         strokeColor: "#3399CC",
         strokeWidth: 1.25,
@@ -142,6 +169,26 @@ export default {
       }
     },
 
+    toggleEditMode(isEnabled) {
+      if (isEnabled) {
+        this.drawType = "None";
+        this.map.removeInteraction(this.draw);
+        this.map.addInteraction(this.modify);
+        this.map.addInteraction(this.select);
+      } else {
+        this.map.removeInteraction(this.modify);
+        this.map.removeInteraction(this.select);
+      }
+    },
+
+    deleteSelectedFeature() {
+      const selectedFeatures = this.select.getFeatures();
+      selectedFeatures.forEach((feature) => {
+        this.source.removeFeature(feature);
+      });
+      selectedFeatures.clear();
+    },
+
     parseFillColor(color, opacity) {
       const r = parseInt(color.substr(1, 2), 16);
       const g = parseInt(color.substr(3, 2), 16);
@@ -165,6 +212,12 @@ export default {
         center: [0, 0],
         zoom: 2,
       }),
+    });
+    this.select = new Select({ condition: click });
+    this.modify = new Modify({ source: this.source });
+
+    this.select.on("select", (e) => {
+      this.drawingSelected = e.selected.length > 0;
     });
   },
   watch: {
