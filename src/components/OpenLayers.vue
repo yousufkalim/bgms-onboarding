@@ -3,20 +3,30 @@
 
   <div class="w-75 h-75 m-auto d-flex flex-column align-items-start">
     <div id="map" class="map w-100 h-100"></div>
-    <div class="w-100 d-flex">
-      <div class="form-floating w-25">
-        <select
-          id="shape-select"
-          class="form-select"
-          @change="addInteraction($event.target.value)"
-        >
-          <option value="None">None</option>
-          <option value="Point">Point</option>
-          <option value="LineString">Line</option>
-          <option value="Polygon">Polygon</option>
-          <option value="Circle">Circle</option>
-        </select>
-        <label for="shape-select" class="form-label">Draw a shape</label>
+
+    <div class="row mt-1">
+      <div class="col-auto">
+        <span class="input-group">
+          <label class="input-group-text" for="type">Geometry type:</label>
+          <select
+            class="form-select"
+            id="type"
+            @change="addInteraction($event.target.value)"
+          >
+            <option value="None">None</option>
+            <option value="Point">Point</option>
+            <option value="LineString">Line</option>
+            <option value="Polygon">Polygon</option>
+            <option value="Circle">Circle</option>
+          </select>
+          <input
+            class="form-control"
+            type="button"
+            value="Undo"
+            id="undo"
+            @click="undoLastDraw"
+          />
+        </span>
       </div>
     </div>
   </div>
@@ -39,6 +49,7 @@ export default {
       map: null,
       draw: null, // Draw interaction
       source: new VectorSource({ wrapX: false }),
+      featuresStack: [],
     };
   },
   methods: {
@@ -51,7 +62,17 @@ export default {
           source: this.source,
           type: type, // 'Point', 'LineString', 'Polygon', etc.
         });
+        this.draw.on("drawend", (event) => {
+          this.featuresStack.push(event.feature);
+        });
         this.map.addInteraction(this.draw);
+      }
+    },
+
+    undoLastDraw() {
+      if (this.featuresStack.length > 0) {
+        const lastFeature = this.featuresStack.pop();
+        this.source.removeFeature(lastFeature);
       }
     },
   },
