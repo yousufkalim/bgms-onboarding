@@ -3,6 +3,7 @@
     <div class="font-monospace fs-5">BGMS</div>
     <div>
       <router-link to="/">Home</router-link> |
+      <router-link to="/map">Map</router-link> |
       <router-link to="/about">About</router-link>
     </div>
     <div v-if="user">

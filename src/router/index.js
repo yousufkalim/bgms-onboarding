@@ -4,12 +4,21 @@ import { auth } from "@/firebase";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import SignupView from "@/views/SignupView.vue";
+import MapView from "@/views/MapView.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      protected: true,
+    },
+  },
+  {
+    path: "/map",
+    name: "map",
+    component: MapView,
     meta: {
       protected: true,
     },
