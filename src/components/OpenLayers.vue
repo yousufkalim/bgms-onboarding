@@ -28,6 +28,42 @@
           />
         </span>
       </div>
+
+      <div class="col-auto d-flex align-items-center" v-if="draw">
+        <div class="col-auto d-flex align-items-center m-2">
+          <label for="strokeColor">Stroke Color:&nbsp;</label>
+          <input
+            id="strokeColor"
+            type="color"
+            v-model="styleOptions.strokeColor"
+          />
+        </div>
+        <div class="col-auto d-flex align-items-center m-2">
+          <label for="strokeWidth">Stroke Width:&nbsp;</label>
+          <input
+            type="range"
+            id="strokeWidth"
+            v-model="styleOptions.strokeWidth"
+            min="1"
+            max="10"
+          />
+        </div>
+        <div class="col-auto d-flex align-items-center m-2">
+          <label for="fillColor">Fill Color:&nbsp;</label>
+          <input type="color" id="fillColor" v-model="styleOptions.fillColor" />
+        </div>
+        <div class="col-auto d-flex align-items-center m-2">
+          <label for="fillOpacity">Fill Opacity:&nbsp;</label>
+          <input
+            type="range"
+            id="fillOpacity"
+            v-model="styleOptions.fillOpacity"
+            min="0"
+            max="1"
+            step="0.1"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +77,7 @@ import { OSM as OSMSource, Vector as VectorSource } from "ol/source";
 import Draw from "ol/interaction/Draw";
 
 import "ol/ol.css";
+import { Fill, Stroke, Style } from "ol/style";
 
 export default {
   name: "OpenLayersComponent",
@@ -50,6 +87,12 @@ export default {
       draw: null, // Draw interaction
       source: new VectorSource({ wrapX: false }),
       featuresStack: [],
+      styleOptions: {
+        strokeColor: "#3399CC",
+        strokeWidth: 1.25,
+        fillColor: "#ffffff",
+        fillOpacity: 0.4,
+      },
     };
   },
   methods: {
@@ -61,6 +104,7 @@ export default {
         this.draw = new Draw({
           source: this.source,
           type: type, // 'Point', 'LineString', 'Polygon', etc.
+          style: this.createStyle(),
         });
         this.draw.on("drawend", (event) => {
           this.featuresStack.push(event.feature);
@@ -69,11 +113,41 @@ export default {
       }
     },
 
+    createStyle() {
+      const fillColor = this.parseFillColor(
+        this.styleOptions.fillColor,
+        this.styleOptions.fillOpacity
+      );
+
+      return new Style({
+        stroke: new Stroke({
+          color: this.styleOptions.strokeColor,
+          width: this.styleOptions.strokeWidth,
+        }),
+        fill: new Fill({
+          color: fillColor,
+        }),
+      });
+    },
+
+    updateStyles() {
+      const newStyle = this.createStyle();
+      this.featuresStack.forEach((feature) => feature.setStyle(newStyle));
+    },
+
     undoLastDraw() {
       if (this.featuresStack.length > 0) {
         const lastFeature = this.featuresStack.pop();
         this.source.removeFeature(lastFeature);
       }
+    },
+
+    parseFillColor(color, opacity) {
+      const r = parseInt(color.substr(1, 2), 16);
+      const g = parseInt(color.substr(3, 2), 16);
+      const b = parseInt(color.substr(5, 2), 16);
+
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     },
   },
   mounted() {
@@ -92,6 +166,14 @@ export default {
         zoom: 2,
       }),
     });
+  },
+  watch: {
+    styleOptions: {
+      deep: true,
+      handler() {
+        this.updateStyles();
+      },
+    },
   },
 };
 </script>
