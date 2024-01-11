@@ -2,8 +2,35 @@
   <!-- Top bar for edit mode toggle and delete feature -->
   <div class="w-100 mb-1 d-flex justify-content-between">
     <div class="d-flex align-items-center">
+      <!-- Geometry type selection and undo button -->
+      <div class="col-auto">
+        <span class="input-group">
+          <label class="input-group-text" for="type">Geometry type:</label>
+          <select
+            class="form-select"
+            id="type"
+            v-model="store.drawType"
+            @change="actions.addInteraction($event.target.value)"
+          >
+            <!-- Geometry type options -->
+            <option value="None">None</option>
+            <option value="Point">Point</option>
+            <option value="LineString">Line</option>
+            <option value="Polygon">Polygon</option>
+            <option value="Circle">Circle</option>
+          </select>
+          <input
+            class="form-control"
+            type="button"
+            value="Undo"
+            id="undo"
+            @click="actions.undoLastDraw"
+          />
+        </span>
+      </div>
+
       <!-- Checkbox to enable edit mode -->
-      <div class="form-check">
+      <div class="form-check mx-3">
         <input
           type="checkbox"
           class="form-check-input"
@@ -14,7 +41,7 @@
       </div>
 
       <!-- Checkbox to enable marker mode -->
-      <div class="form-check mx-5">
+      <div class="form-check mx-2">
         <input
           type="checkbox"
           class="form-check-input"

@@ -1,34 +1,10 @@
 <template>
   <div class="row mt-1">
-    <!-- Geometry type selection and undo button -->
-    <div class="col-auto">
-      <span class="input-group">
-        <label class="input-group-text" for="type">Geometry type:</label>
-        <select
-          class="form-select"
-          id="type"
-          v-model="store.drawType"
-          @change="actions.addInteraction($event.target.value)"
-        >
-          <!-- Geometry type options -->
-          <option value="None">None</option>
-          <option value="Point">Point</option>
-          <option value="LineString">Line</option>
-          <option value="Polygon">Polygon</option>
-          <option value="Circle">Circle</option>
-        </select>
-        <input
-          class="form-control"
-          type="button"
-          value="Undo"
-          id="undo"
-          @click="actions.undoLastDraw"
-        />
-      </span>
-    </div>
-
     <!-- Style controls, displayed when drawing is active -->
-    <div class="col-auto d-flex align-items-center" v-if="store.draw">
+    <div
+      class="col-auto d-flex align-items-center"
+      v-if="store.drawType !== 'None'"
+    >
       <!-- Stroke color picker -->
       <div class="col-auto d-flex align-items-center m-2">
         <label for="strokeColor">Stroke Color:&nbsp;</label>
@@ -68,6 +44,53 @@
           min="0"
           max="1"
           step="0.1"
+        />
+      </div>
+    </div>
+
+    <div class="col-auto d-flex align-items-center" v-if="store.isAddingMarker">
+      <div class="col-auto d-flex align-items-center m-2">
+        <label for="iconUrl">Icon URL:&nbsp;</label>
+        <input
+          id="iconUrl"
+          type="text"
+          v-model="store.markerCustomizations.iconUrl"
+        />
+      </div>
+      <div class="col-auto d-flex align-items-center m-2">
+        <label for="iconScale">Icon Scale:&nbsp;</label>
+        <input
+          type="number"
+          id="iconScale"
+          v-model="store.markerCustomizations.iconScale"
+          min="0.1"
+          step="0.1"
+        />
+      </div>
+      <div class="col-auto d-flex align-items-center m-2">
+        <label for="labelText">Label Text:&nbsp;</label>
+        <input
+          id="labelText"
+          type="text"
+          v-model="store.markerCustomizations.labelText"
+        />
+      </div>
+      <div class="col-auto d-flex align-items-center m-2">
+        <label for="labelSize">Label Size:&nbsp;</label>
+        <input
+          type="number"
+          id="labelSize"
+          v-model="store.markerCustomizations.labelSize"
+          min="8"
+          step="1"
+        />
+      </div>
+      <div class="col-auto d-flex align-items-center m-2">
+        <label for="labelColor">Label Color:&nbsp;</label>
+        <input
+          id="labelColor"
+          type="color"
+          v-model="store.markerCustomizations.labelColor"
         />
       </div>
     </div>

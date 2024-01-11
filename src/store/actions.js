@@ -1,6 +1,6 @@
 import { store } from ".";
 import Draw from "ol/interaction/Draw";
-import { Fill, Stroke, Style } from "ol/style";
+import { Fill, Icon, Stroke, Style, Text } from "ol/style";
 import { Feature } from "ol";
 import { Point } from "ol/geom";
 
@@ -93,8 +93,27 @@ class MapActions {
       type: "marker",
       geometry: new Point(coordinate),
     });
-    feature.setStyle(store.markerStyle);
+    const markerStyle = this.createMarkerStyle(store.markerCustomizations);
+    feature.setStyle(markerStyle);
     store.source.addFeature(feature); // Assuming this.source is the vector source used for drawings
+  }
+
+  // Generate marker styles
+  createMarkerStyle(customizations) {
+    return new Style({
+      image: new Icon({
+        anchor: [0.5, 1],
+        scale: customizations.iconScale,
+        src: customizations.iconUrl,
+      }),
+      text: new Text({
+        text: customizations.labelText,
+        scale: customizations.labelSize,
+        fill: new Fill({
+          color: customizations.labelColor,
+        }),
+      }),
+    });
   }
 }
 

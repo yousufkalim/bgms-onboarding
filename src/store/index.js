@@ -1,7 +1,6 @@
 import { reactive } from "vue";
 import actions from "./actions";
 import { Vector as VectorSource } from "ol/source";
-import { Icon, Style } from "ol/style";
 
 const store = reactive({
   drawType: "None", // Current drawing type
@@ -12,12 +11,13 @@ const store = reactive({
   select: null, // Select interaction
   modify: null, // Modify interaction
   drawingSelected: false, // Flag to check if a drawing is selected
-  markerStyle: new Style({
-    image: new Icon({
-      anchor: [0.5, 1],
-      src: "/marker.png",
-    }),
-  }),
+  markerCustomizations: {
+    iconUrl: "/marker.png",
+    iconScale: 1,
+    labelText: "",
+    labelSize: 2,
+    labelColor: "#000000",
+  },
   isAddingMarker: false, // Flag to check if marker mode is enabled or not
   styleOptions: {
     // Default style options for drawing
