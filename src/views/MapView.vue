@@ -48,10 +48,26 @@ export default {
         zoom: 15,
       }),
     });
-    this.store.select = new Select({ condition: click });
+    this.store.select = new Select({
+      condition: click,
+    });
     this.store.modify = new Modify({ source: this.store.source });
 
     this.store.select.on("select", (e) => {
+      // Give custom selected style to the markers
+      e.selected.forEach((feature) => {
+        const type = feature.get("type");
+        if (type === "marker") {
+          feature.setStyle(
+            this.actions.createMarkerStyle({
+              ...this.store.markerCustomizations,
+              iconUrl: "/selected-marker.png",
+            })
+          );
+        }
+      });
+
+      // Update the flag
       this.store.drawingSelected = e.selected.length > 0;
     });
 

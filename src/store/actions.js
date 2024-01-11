@@ -95,7 +95,7 @@ class MapActions {
     });
     const markerStyle = this.createMarkerStyle(store.markerCustomizations);
     feature.setStyle(markerStyle);
-    store.source.addFeature(feature); // Assuming this.source is the vector source used for drawings
+    store.source.addFeature(feature);
   }
 
   // Generate marker styles
