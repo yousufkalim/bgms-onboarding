@@ -1,9 +1,11 @@
 <template>
   <!-- Top bar for edit mode toggle and delete feature -->
-  <div class="w-100 mb-1 d-flex justify-content-between">
-    <div class="d-flex align-items-center">
+
+  <div class="d-flex flex-wrap justify-content-between mb-1">
+    <div class="d-flex flex-wrap align-items-center">
       <!-- Geometry type selection and undo button -->
-      <div class="col-auto">
+      <div class="mb-2 mb-md-0">
+        <!-- Added margin-bottom for small screens -->
         <span class="input-group">
           <label class="input-group-text" for="type">Geometry type:</label>
           <select
@@ -30,7 +32,8 @@
       </div>
 
       <!-- Checkbox to enable edit mode -->
-      <div class="form-check mx-3">
+      <div class="form-check mx-2 mb-2 mb-md-0">
+        <!-- Added margin-bottom for small screens -->
         <input
           type="checkbox"
           class="form-check-input"
@@ -51,15 +54,6 @@
         <label for="markerMode" class="form-check-label">Add Markers</label>
       </div>
     </div>
-
-    <!-- Delete button, shown only when a drawing is selected -->
-    <button
-      v-if="store.drawingSelected"
-      class="btn btn-danger"
-      @click="actions.deleteSelectedFeature"
-    >
-      Delete
-    </button>
   </div>
 
   <!-- Map container -->

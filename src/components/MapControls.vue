@@ -2,7 +2,7 @@
   <div class="row mt-1">
     <!-- Style controls, displayed when drawing is active -->
     <div
-      class="col-auto d-flex align-items-center"
+      class="col-auto d-flex flex-wrap align-items-center"
       v-if="store.drawType !== 'None'"
     >
       <!-- Stroke color picker -->
@@ -48,7 +48,10 @@
       </div>
     </div>
 
-    <div class="col-auto d-flex align-items-center" v-if="store.isAddingMarker">
+    <div
+      class="col-auto d-flex flex-wrap align-items-center"
+      v-if="store.isAddingMarker"
+    >
       <div class="col-auto d-flex align-items-center m-2">
         <label for="iconUrl">Icon URL:&nbsp;</label>
         <input
@@ -96,6 +99,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "MapControlsComponent",

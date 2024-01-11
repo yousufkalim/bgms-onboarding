@@ -1,6 +1,6 @@
 <template>
   <nav class="d-flex justify-content-between align-items-center">
-    <div class="font-monospace fs-5">BGMS</div>
+    <div class="logo font-monospace fs-5">BGMS</div>
     <div>
       <router-link to="/">Home</router-link> |
       <router-link to="/map">Map</router-link> |
@@ -40,3 +40,11 @@ export default {
   },
 };
 </script>
+
+<style>
+@media screen and (max-width: 399px) {
+  .logo {
+    display: none;
+  }
+}
+</style>

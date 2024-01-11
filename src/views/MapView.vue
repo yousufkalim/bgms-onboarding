@@ -3,12 +3,16 @@
   <h3>Open Layers</h3>
 
   <!-- Main container for map and controls -->
-  <div class="w-75 h-75 m-auto d-flex flex-column align-items-start">
-    <!-- Top bar for edit mode toggle and delete feature -->
-    <OpenLayers />
+  <div class="container-fluid" style="height: 100%">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 col-sm-12 m-auto" style="height: 70vh">
+        <!-- Top bar for edit mode toggle and delete feature -->
+        <OpenLayers />
 
-    <!-- Bottom bar for drawing controls -->
-    <MapControls />
+        <!-- Bottom bar for drawing controls -->
+        <MapControls />
+      </div>
+    </div>
   </div>
 </template>
 
