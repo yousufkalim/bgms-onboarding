@@ -15,6 +15,7 @@
 <script>
 import View from "ol/View";
 import Map from "ol/Map";
+import { fromLonLat } from "ol/proj";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM as OSMSource } from "ol/source";
 import Modify from "ol/interaction/Modify";
@@ -43,8 +44,8 @@ export default {
         }),
       ],
       view: new View({
-        center: [0, 0],
-        zoom: 2,
+        center: fromLonLat([74.326127, 31.484853]),
+        zoom: 15,
       }),
     });
     this.store.select = new Select({ condition: click });
