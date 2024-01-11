@@ -34,6 +34,7 @@ export default {
 
         router.push("/");
       } catch (e) {
+        toast.error(e.message);
         console.log(e);
       }
     },

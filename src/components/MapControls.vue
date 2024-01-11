@@ -48,6 +48,7 @@
       </div>
     </div>
 
+    <!-- Marker controls, displayed when marker is active -->
     <div
       class="col-auto d-flex flex-wrap align-items-center"
       v-if="store.isAddingMarker"
