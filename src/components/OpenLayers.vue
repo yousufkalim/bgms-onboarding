@@ -1,15 +1,28 @@
 <template>
   <!-- Top bar for edit mode toggle and delete feature -->
   <div class="w-100 mb-1 d-flex justify-content-between">
-    <!-- Checkbox to enable edit mode -->
-    <div class="form-check">
-      <input
-        type="checkbox"
-        class="form-check-input"
-        id="editMode"
-        @change="actions.toggleEditMode($event.target.checked)"
-      />
-      <label for="editMode" class="form-check-label">Edit Mode</label>
+    <div class="d-flex align-items-center">
+      <!-- Checkbox to enable edit mode -->
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="editMode"
+          @change="actions.toggleEditMode($event.target.checked)"
+        />
+        <label for="editMode" class="form-check-label">Edit Mode</label>
+      </div>
+
+      <!-- Checkbox to enable marker mode -->
+      <div class="form-check mx-5">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="markerMode"
+          @change="store.isAddingMarker = $event.target.checked"
+        />
+        <label for="markerMode" class="form-check-label">Add Markers</label>
+      </div>
     </div>
 
     <!-- Delete button, shown only when a drawing is selected -->

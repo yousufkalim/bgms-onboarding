@@ -54,6 +54,14 @@ export default {
     this.store.select.on("select", (e) => {
       this.store.drawingSelected = e.selected.length > 0;
     });
+
+    // Listen the click event on map to add markers
+    this.store.map.on("singleclick", (event) => {
+      if (this.store.isAddingMarker) {
+        // isAddingMarker is a flag to toggle marker adding mode
+        this.actions.addMarker(event.coordinate);
+      }
+    });
   },
 };
 </script>

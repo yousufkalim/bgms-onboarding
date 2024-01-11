@@ -1,6 +1,8 @@
 import { store } from ".";
 import Draw from "ol/interaction/Draw";
 import { Fill, Stroke, Style } from "ol/style";
+import { Feature } from "ol";
+import { Point } from "ol/geom";
 
 class MapActions {
   // Add drawing interaction to the map
@@ -83,6 +85,16 @@ class MapActions {
     const b = parseInt(color.substr(5, 2), 16);
 
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+
+  // Add markers to the map
+  addMarker(coordinate) {
+    const feature = new Feature({
+      type: "marker",
+      geometry: new Point(coordinate),
+    });
+    feature.setStyle(store.markerStyle);
+    store.source.addFeature(feature); // Assuming this.source is the vector source used for drawings
   }
 }
 
