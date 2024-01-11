@@ -55,6 +55,15 @@
         <label for="markerMode" class="form-check-label">Add Markers</label>
       </div>
     </div>
+
+    <!-- Delete button, shown only when a drawing is selected -->
+    <button
+      v-if="store.drawingSelected"
+      class="btn btn-danger"
+      @click="actions.deleteSelectedFeature"
+    >
+      Delete
+    </button>
   </div>
 </template>
 
