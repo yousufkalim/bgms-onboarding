@@ -6,46 +6,41 @@
       v-if="store.drawType !== 'None'"
     >
       <!-- Stroke color picker -->
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="strokeColor">Stroke Color:&nbsp;</label>
-        <input
-          id="strokeColor"
-          type="color"
-          v-model="store.styleOptions.strokeColor"
-        />
-      </div>
+      <Input
+        type="color"
+        name="strokeColor"
+        :value="store.styleOptions.strokeColor"
+        label="Stroke Color"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
       <!-- Stroke width range slider -->
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="strokeWidth">Stroke Width:&nbsp;</label>
-        <input
-          type="range"
-          id="strokeWidth"
-          v-model="store.styleOptions.strokeWidth"
-          min="1"
-          max="10"
-        />
-      </div>
+      <Input
+        type="range"
+        name="strokeWidth"
+        :value="store.styleOptions.strokeWidth"
+        label="Stroke Width"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
       <!-- Fill color picker -->
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="fillColor">Fill Color:&nbsp;</label>
-        <input
-          type="color"
-          id="fillColor"
-          v-model="store.styleOptions.fillColor"
-        />
-      </div>
+      <Input
+        type="color"
+        name="fillColor"
+        :value="store.styleOptions.fillColor"
+        label="Fill Color"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
       <!-- Fill opacity range slider -->
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="fillOpacity">Fill Opacity:&nbsp;</label>
-        <input
-          type="range"
-          id="fillOpacity"
-          v-model="store.styleOptions.fillOpacity"
-          min="0"
-          max="1"
-          step="0.1"
-        />
-      </div>
+      <Input
+        type="range"
+        name="fillOpacity"
+        :value="store.styleOptions.fillOpacity"
+        label="Fill Opacity"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
     </div>
 
     <!-- Marker controls, displayed when marker is active -->
@@ -53,60 +48,67 @@
       class="col-auto d-flex flex-wrap align-items-center"
       v-if="store.isAddingMarker"
     >
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="iconUrl">Icon URL:&nbsp;</label>
-        <input
-          id="iconUrl"
-          type="text"
-          v-model="store.markerCustomizations.iconUrl"
-        />
-      </div>
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="iconScale">Icon Scale:&nbsp;</label>
-        <input
-          type="number"
-          id="iconScale"
-          v-model="store.markerCustomizations.iconScale"
-          min="0.1"
-          step="0.1"
-        />
-      </div>
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="labelText">Label Text:&nbsp;</label>
-        <input
-          id="labelText"
-          type="text"
-          v-model="store.markerCustomizations.labelText"
-        />
-      </div>
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="labelSize">Label Size:&nbsp;</label>
-        <input
-          type="number"
-          id="labelSize"
-          v-model="store.markerCustomizations.labelSize"
-          min="8"
-          step="1"
-        />
-      </div>
-      <div class="col-auto d-flex align-items-center m-2">
-        <label for="labelColor">Label Color:&nbsp;</label>
-        <input
-          id="labelColor"
-          type="color"
-          v-model="store.markerCustomizations.labelColor"
-        />
-      </div>
+      <Input
+        name="iconUrl"
+        :value="store.markerCustomizations.iconUrl"
+        @change="handleMarkerStyleChange"
+        label="Icon URL"
+        classes="m-2"
+      />
+
+      <Input
+        name="labelText"
+        :value="store.markerCustomizations.labelText"
+        @change="handleMarkerStyleChange"
+        label="Label Text"
+        classes="m-2"
+      />
+      <Input
+        type="range"
+        name="iconScale"
+        :value="store.markerCustomizations.iconScale"
+        label="Icon Scale"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
+      <Input
+        type="range"
+        name="labelSize"
+        :value="store.markerCustomizations.labelSize"
+        label="Label Size"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
+
+      <Input
+        type="color"
+        name="labelColor"
+        :value="store.markerCustomizations.labelColor"
+        label="Label Color"
+        classes="m-2"
+        @change="handleShapeStyleChange"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import Input from "@/components/common/Input.vue";
+
 export default {
   name: "MapControlsComponent",
   inject: ["store", "actions"],
+  components: { Input },
   data() {
     return { styleOptions: this.store.styleOptions };
+  },
+  methods: {
+    handleShapeStyleChange(e) {
+      this.store.styleOptions[e.name] = e.value;
+    },
+    handleMarkerStyleChange(e) {
+      this.store.markerCustomizations[e.name] = e.value;
+    },
   },
   // Watcher for style options
   watch: {

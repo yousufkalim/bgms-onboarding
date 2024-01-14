@@ -8,36 +8,31 @@
               {{ formType === "login" ? "Login" : "Sign Up" }}
             </h5>
             <form @submit.prevent="handleSubmit">
-              <div class="form-floating mb-3">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="floatingInput"
-                  placeholder="name@example.com"
-                  v-model="email"
-                />
-                <label for="floatingInput">Email address</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="floatingPassword"
-                  placeholder="Password"
-                  v-model="password"
-                />
-                <label for="floatingPassword">Password</label>
-              </div>
-              <div class="form-floating mb-3" v-if="formType === 'signup'">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="floatingConfirmPassword"
-                  placeholder="Password"
-                  v-model="confirmPassword"
-                />
-                <label for="floatingConfirmPassword">Confirm Password</label>
-              </div>
+              <Input
+                type="email"
+                :value="email"
+                name="email"
+                placeholder="name@example.com"
+                label="Email address"
+                @change="handleChange"
+              />
+              <Input
+                type="password"
+                :value="password"
+                name="password"
+                placeholder="Password"
+                label="Password"
+                @change="handleChange"
+              />
+              <Input
+                v-if="formType === 'signup'"
+                type="password"
+                :value="confirmPassword"
+                name="confirmPassword"
+                placeholder="Password"
+                label="Confirm Password"
+                @change="handleChange"
+              />
 
               <div
                 v-if="formType === 'login'"
@@ -48,7 +43,6 @@
                   type="checkbox"
                   value=""
                   id="rememberPasswordCheck"
-                  v-model="remember"
                 />
                 <label
                   class="form-check-label mx-3"
@@ -75,8 +69,10 @@
 </template>
 
 <script>
+import Input from "@/components/common/Input.vue";
 export default {
   name: "AuthComponent",
+  components: { Input },
   props: {
     formType: {
       type: String,
@@ -91,6 +87,10 @@ export default {
     };
   },
   methods: {
+    handleChange(e) {
+      this[e.name] = e.value;
+    },
+
     handleSubmit() {
       const data = {
         email: this.email,
