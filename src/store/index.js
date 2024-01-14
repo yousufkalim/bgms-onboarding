@@ -19,6 +19,7 @@ const store = reactive({
     labelColor: "#000000",
   },
   isAddingMarker: false, // Flag to check if marker mode is enabled or not
+  isEditing: false, // Flag to check if editing mode or not
   styleOptions: {
     // Default style options for drawing
     strokeColor: "#3399CC",

@@ -15,6 +15,8 @@
             @change="
               (e) => {
                 store.drawType = e.target.value;
+                actions.disableMarkerMode();
+                actions.toggleEditMode(false);
                 actions.addInteraction(e.target.value);
               }
             "
@@ -34,6 +36,7 @@
       <Checkbox
         name="editMode"
         label="Edit Mode"
+        :checked="store.isEditing"
         @change="actions.toggleEditMode($event.target.checked)"
       />
 
@@ -42,7 +45,14 @@
         classes="form-check mx-2"
         name="markerMode"
         label="Add Markers"
-        @change="store.isAddingMarker = $event.target.checked"
+        :checked="store.isAddingMarker"
+        @change="
+          (e) => {
+            actions.disableDrawMode();
+            actions.toggleEditMode(false);
+            store.isAddingMarker = e.target.checked;
+          }
+        "
       />
     </div>
 

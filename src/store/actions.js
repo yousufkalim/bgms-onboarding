@@ -1,6 +1,6 @@
 import { store } from ".";
 import Draw from "ol/interaction/Draw";
-import { Fill, Icon, Stroke, Style, Text } from "ol/style";
+import { Fill, Icon, Stroke, Style, Text, Circle } from "ol/style";
 import { Feature } from "ol";
 import { Point } from "ol/geom";
 
@@ -14,51 +14,74 @@ class MapActions {
       store.draw = new Draw({
         source: store.source,
         type: type, // 'Point', 'LineString', 'Polygon', etc.
-        style: this.createStyle(),
+        style: this.createStyle(type),
       });
       store.draw.on("drawend", (event) => {
-        store.featuresStack.push(event.feature);
+        const newStyle = this.createStyle(type);
+        event.feature.setStyle(newStyle);
+        store.featuresStack.push({ name: type, feature: event.feature });
       });
       store.map.addInteraction(store.draw);
     }
   }
 
   // Create a new style for drawing based on style options
-  createStyle() {
+  createStyle(type) {
     const fillColor = this.parseFillColor(
       store.styleOptions.fillColor,
       store.styleOptions.fillOpacity
     );
 
-    return new Style({
-      stroke: new Stroke({
-        color: store.styleOptions.strokeColor,
-        width: store.styleOptions.strokeWidth,
-      }),
-      fill: new Fill({
-        color: fillColor,
-      }),
-    });
+    // Point requires image to be styled
+    if (type === "Point") {
+      return new Style({
+        image: new Circle({
+          radius: 7,
+          fill: new Fill({
+            color: fillColor,
+          }),
+          stroke: new Stroke({
+            color: store.styleOptions.strokeColor,
+            width: store.styleOptions.strokeWidth,
+          }),
+        }),
+      });
+    } else {
+      return new Style({
+        stroke: new Stroke({
+          color: store.styleOptions.strokeColor,
+          width: store.styleOptions.strokeWidth,
+        }),
+        fill: new Fill({
+          color: fillColor,
+        }),
+      });
+    }
   }
 
   // Update styles of all features in the stack
   updateStyles() {
-    const newStyle = this.createStyle();
-    store.featuresStack.forEach((feature) => feature.setStyle(newStyle));
+    store.featuresStack.forEach((stack) => {
+      const newStyle = this.createStyle(stack.name);
+      return { ...stack, feature: stack.feature.setStyle(newStyle) };
+    });
   }
 
   // Undo the last drawing action
   undoLastDraw() {
     if (store.featuresStack.length > 0) {
       const lastFeature = store.featuresStack.pop();
-      store.source.removeFeature(lastFeature);
+      store.source.removeFeature(lastFeature.feature);
     }
   }
 
   // Toggle the edit mode on the map
   toggleEditMode(isEnabled) {
+    store.isEditing = isEnabled;
+
     if (isEnabled) {
       store.drawType = "None";
+      store.isAddingMarker = false;
       store.map.removeInteraction(store.draw);
       store.map.addInteraction(store.modify);
       store.map.addInteraction(store.select);
@@ -114,6 +137,19 @@ class MapActions {
         }),
       }),
     });
+  }
+
+  //   Disable draw mode
+  disableDrawMode() {
+    store.drawType = "None";
+    if (store.draw) {
+      store.map.removeInteraction(store.draw);
+    }
+  }
+
+  //   Disable marker mode
+  disableMarkerMode() {
+    store.isAddingMarker = false;
   }
 }
 

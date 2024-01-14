@@ -4,6 +4,7 @@
     <input
       type="checkbox"
       class="form-check-input"
+      :checked="checked"
       :name="name"
       :id="label.replace(' ', '')"
       @change="$emit('change', $event)"
@@ -23,6 +24,7 @@ export default {
       default: "form-check mx-2 mb-2 mb-md-0",
     },
     name: String,
+    checked: Boolean,
     label: String,
   },
 };
