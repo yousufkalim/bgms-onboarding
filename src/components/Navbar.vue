@@ -7,7 +7,7 @@
       <router-link to="/about">About</router-link>
     </div>
     <div v-if="user">
-      <button class="btn btn-danger" @click="logout">Logout</button>
+      <Button classes="btn btn-danger" :click="logout" name="Logout" />
     </div>
     <div v-else>
       <router-link to="/login">Login</router-link> |
@@ -21,9 +21,11 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import router from "@/router";
 import { ref } from "vue";
+import Button from "@/components/common/Button.vue";
 
 export default {
   name: "NavbarComponent",
+  components: { Button },
   setup() {
     const user = ref(null);
 

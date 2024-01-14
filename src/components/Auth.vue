@@ -53,12 +53,11 @@
               </div>
 
               <div class="d-grid">
-                <button
-                  class="btn btn-primary btn-login text-uppercase fw-bold"
+                <Button
+                  classes="btn btn-primary btn-login text-uppercase fw-bold"
                   type="submit"
-                >
-                  {{ formType === "login" ? "Login" : "Sign Up" }}
-                </button>
+                  :name="formType === 'login' ? 'Login' : 'Sign Up'"
+                />
               </div>
             </form>
           </div>
@@ -70,9 +69,11 @@
 
 <script>
 import Input from "@/components/common/Input.vue";
+import Button from "@/components/common/Button.vue";
+
 export default {
   name: "AuthComponent",
-  components: { Input },
+  components: { Input, Button },
   props: {
     formType: {
       type: String,
